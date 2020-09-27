@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'custom_switch_widget.dart';
 
 class ThemeSwitchWidget extends StatefulWidget {
-  final Function(bool val) handleThemeSelection;
+  final Function(String val) handleThemeSelection;
   final String selectedTheme;
 
   ThemeSwitchWidget({
@@ -16,6 +16,8 @@ class ThemeSwitchWidget extends StatefulWidget {
 }
 
 class ThemeSwitchWidgetState extends State<ThemeSwitchWidget> {
+  String selectedTheme;
+
   @override
   void initState() {
     super.initState();
@@ -26,8 +28,25 @@ class ThemeSwitchWidgetState extends State<ThemeSwitchWidget> {
     super.dispose();
   }
 
+  themeChanged(bool nightMode) {
+    String value = nightMode ? 'dark' : 'light';
+
+    setState(() {
+      selectedTheme = value;
+    });
+    widget.handleThemeSelection(value);
+  }
+
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      if (Theme.of(context).brightness == Brightness.dark) {
+        selectedTheme = 'dark';
+      } else {
+        selectedTheme = 'light';
+      }
+    });
+
     return new Container(
       child: Padding(
         padding: EdgeInsets.all(20.0),
@@ -51,7 +70,7 @@ class ThemeSwitchWidgetState extends State<ThemeSwitchWidget> {
               CustomSwitchWidget(
                 value: widget.selectedTheme == 'dark' ? true : false,
                 onChanged: (bool val) {
-                  widget.handleThemeSelection(val);
+                  themeChanged(val);
                 },
               ),
             ],
